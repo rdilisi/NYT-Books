@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -8,11 +7,19 @@ class App extends Component {
     books: []
   }
 
-
-
   componentDidMount = () => {
+    
+  }
+
+  searchinput = (event) => {
+    this.setState({
+      searchinput: event.target.value
+    })
+  }
+  searchsubmit = (event) => {
+    event.preventDefault()
     var that = this
-    fetch("https://www.googleapis.com/books/v1/volumes?q=quilting")
+    fetch("https://www.googleapis.com/books/v1/volumes?q="+ this.state.searchinput)
     .then(function(data){
       return data.json()
     })
@@ -25,7 +32,7 @@ class App extends Component {
   }
   render() {
     var displayBooks = this.state.books.map((eachitem,index)=>
-      <div>
+      <div key={index}>
         <h2>
           {eachitem.volumeInfo.title}
         </h2>
@@ -33,11 +40,19 @@ class App extends Component {
         <p>
           <strong>Author: {eachitem.volumeInfo.authors}</strong>
         </p>
+        {/* <img src={eachitem.volumeInfo.imageLinks.thumbnail}></img> */}
+          {/* {eachitem.volumeInfo.imageLinks.thumbnail} */}
       </div>
     )
     return (
       <div className="App">
+      <div className= "header">
         <h1>NYT Google Book Search</h1>
+        <form onSubmit={this.searchsubmit}>
+          <input onChange={this.searchinput}></input>
+          <button type="submit"> Search Here </button>
+        </form>
+        </div>
         {displayBooks}
       </div>
     );
